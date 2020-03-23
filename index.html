@@ -1,0 +1,42 @@
+<html>
+<head>
+    <title>Test</title>
+</head>
+<body>
+
+<h1>Hello World</h1>
+
+<script data-src="vendor.js"></script>
+<script data-src="app.js"></script>
+<script>
+    const promises = [];
+    const scripts = document.getElementsByTagName('script');
+    for (let i = 0; i < scripts.length; i++) {
+        const script = scripts[i];
+        const src = script.getAttribute('data-src');
+        if (src) {
+            const promise = new Promise(function (resolve) {
+                const newScript = document.createElement('script');
+                newScript.src = src;
+                setTimeout(function () {
+                    document.body.appendChild(newScript);
+                    newScript.onload = function() {
+                        resolve(i);
+                    };
+                }, 1000 * i); // Simulating time
+            });
+
+            promises.push(promise);
+        }
+    }
+
+    async function run() {
+      const res = await Promise.all(promises);
+      console.log('res', res);
+    }
+
+    run();
+
+</script>
+</body>
+</html>
